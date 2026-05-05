@@ -3,3 +3,7 @@ export * from "./programs";
 export * from "./sessions";
 export * from "./enrollments";
 export * from "./announcements";
+export * from "./testimonials";
+export * from "./faq";
+export * from "./contacts";
+export * from "./attendance";

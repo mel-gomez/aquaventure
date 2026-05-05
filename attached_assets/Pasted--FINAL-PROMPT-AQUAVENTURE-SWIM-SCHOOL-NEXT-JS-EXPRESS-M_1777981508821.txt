@@ -1,0 +1,156 @@
+✅ FINAL PROMPT – AQUAVENTURE SWIM SCHOOL (NEXT.JS + EXPRESS + MYSQL)
+
+Create a modern, full-stack web application for Aquaventure Swim School, a children-focused swim school based in Angono, Rizal. The system should include a public website, swimmer/parent portal, and admin dashboard.
+
+⚙️ Tech Stack (STRICT REQUIREMENTS)
+Frontend: Next.js (latest, App Router)
+Backend: Express.js on Node.js
+Database: MySQL
+ORM: Prisma
+Authentication: JWT (access + refresh)
+Styling: Tailwind CSS
+Architecture: API-based (separate frontend/backend)
+🌊 LANDING PAGE (VERY IMPORTANT – DESIGN FOCUS)
+
+Design a visually impressive, modern, and clean landing page that reflects:
+
+Water / aquatic theme
+Family-friendly but premium feel
+Creativity inspired by Angono, Rizal (known for arts & culture)
+🎨 Design Direction:
+Use gradient ocean colors (deep blue → aqua)
+Subtle wave animations / parallax scrolling
+Clean whitespace (not cluttered)
+Soft shadows + glassmorphism accents
+Rounded UI elements
+🧩 Landing Page Sections
+1. Hero Section (High Impact)
+Full-width modern hero
+Background: water texture or soft animation
+Headline:
+“Building Confidence in Every Stroke”
+Subtext:
+“Professional swim training for kids and families in Angono, Rizal”
+CTA buttons:
+“Enroll Now”
+“View Programs”
+Optional:
+Floating swimmer illustrations or subtle motion effects
+2. Quick Highlights (Cards Section)
+3–4 cards:
+Certified Coaches
+Safe Environment
+Structured Programs
+Family-Friendly
+3. Programs Preview
+Clean card layout
+Hover effects
+Show levels: Beginner → Advanced
+4. Why Choose Us
+Icons + short descriptions
+Emphasize:
+Safety
+Confidence building
+Skill progression
+5. Local Identity Section (Angono Touch)
+Section highlighting:
+“Proudly serving Angono, Rizal”
+Community-focused learning
+Optional: subtle artistic design inspiration (patterns, textures)
+6. Testimonials (Modern Carousel)
+Parent reviews
+Clean card UI with soft shadows
+7. Call-To-Action Banner
+Bold section:
+“Start Your Child’s Swimming Journey Today”
+CTA: Enroll Now
+8. Footer
+Contact info
+Social links
+Quick navigation
+🌐 PUBLIC PAGES
+Home (landing page above)
+About Us
+Programs
+Schedule (dynamic)
+Pricing
+Gallery
+Testimonials
+Contact
+FAQ
+👤 SWIMMER / PARENT PORTAL
+JWT authentication
+Profile management
+Enroll in classes
+View schedules
+Attendance tracking
+Progress tracking
+Payment history
+Notifications
+Reschedule/cancel classes
+🛠️ ADMIN DASHBOARD
+User management (students, parents, coaches)
+Program & schedule management
+Attendance tracking
+Payment & invoice system
+Reports (enrollment, revenue)
+Notifications system
+CMS (gallery, testimonials, FAQ, homepage)
+🗄️ DATABASE (MYSQL via Prisma)
+
+Tables:
+
+users
+profiles
+programs
+schedules
+enrollments
+attendance
+payments
+invoices
+testimonials
+gallery
+notifications
+faq
+contacts
+🔐 SECURITY
+JWT auth (access + refresh)
+bcrypt password hashing
+RBAC (role-based access control)
+Protected API routes
+Input validation
+🎨 UI/UX
+Clean, modern SaaS dashboard style
+Mobile-first responsive design
+Sidebar navigation (admin & portal)
+Card-based layouts
+Smooth transitions
+✨ EXTRA FEATURES
+Email notifications
+Optional SMS (Philippines-ready)
+PDF invoices
+Search, filters, pagination
+Floating “Enroll Now” button
+Optional chat support
+🚀 EXPECTED OUTPUT
+
+Generate:
+
+Next.js frontend (App Router)
+Express.js backend (modular)
+Prisma schema + migrations (MySQL)
+REST API
+JWT authentication
+Admin dashboard UI
+Swimmer portal UI
+🧠 GOAL
+
+The final website should feel:
+
+Premium but approachable
+Modern but clean
+Eye-catching but not overwhelming
+Clearly communicates:
+👉 Safety
+👉 Fun
+👉 Skill development

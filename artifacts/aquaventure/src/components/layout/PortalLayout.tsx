@@ -1,11 +1,8 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { useAuth } from "@/hooks/use-auth";
-import { Button } from "@/components/ui/button";
-import logo from "@assets/image_1777978704079.png";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { LayoutDashboard, FilePlus, Megaphone } from "lucide-react";
+import { LayoutDashboard, FilePlus, ClipboardCheck } from "lucide-react";
 
 export function PortalLayout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
@@ -13,6 +10,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
   const navigation = [
     { name: "My Dashboard", href: "/portal", icon: LayoutDashboard },
     { name: "Enroll in Class", href: "/portal/enroll", icon: FilePlus },
+    { name: "Attendance", href: "/portal/attendance", icon: ClipboardCheck },
   ];
 
   return (
@@ -22,15 +20,15 @@ export function PortalLayout({ children }: { children: ReactNode }) {
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="flex flex-col md:flex-row gap-8">
             {/* Sidebar */}
-            <aside className="w-full md:w-64 flex-shrink-0">
-              <div className="bg-card rounded-xl border shadow-sm p-4 sticky top-24">
+            <aside className="w-full md:w-56 flex-shrink-0">
+              <div className="bg-card rounded-xl border shadow-sm p-3 sticky top-24">
                 <nav className="space-y-1">
                   {navigation.map((item) => {
                     const isActive = location === item.href;
                     return (
                       <Link key={item.name} href={item.href}>
-                        <span className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors ${isActive ? "bg-primary text-primary-foreground font-medium" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
-                          <item.icon className="h-5 w-5" />
+                        <span className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer transition-colors text-sm ${isActive ? "bg-primary text-primary-foreground font-medium" : "text-muted-foreground hover:bg-muted hover:text-foreground"}`}>
+                          <item.icon className="h-4 w-4 shrink-0" />
                           {item.name}
                         </span>
                       </Link>
@@ -41,7 +39,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
             </aside>
 
             {/* Content */}
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               {children}
             </div>
           </div>

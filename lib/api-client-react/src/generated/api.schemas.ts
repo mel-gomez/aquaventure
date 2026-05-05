@@ -206,6 +206,127 @@ export interface CreateAnnouncementBody {
   content: string;
 }
 
+export interface Testimonial {
+  id: number;
+  parentName: string;
+  content: string;
+  rating: number;
+  approved: boolean;
+  createdAt: string;
+}
+
+export interface SubmitTestimonialBody {
+  parentName: string;
+  content: string;
+  /**
+   * @minimum 1
+   * @maximum 5
+   */
+  rating: number;
+}
+
+export interface ApproveTestimonialBody {
+  approved: boolean;
+}
+
+export interface FaqEntry {
+  id: number;
+  question: string;
+  answer: string;
+  category: string;
+  sortOrder: number;
+  createdAt: string;
+}
+
+export interface CreateFaqBody {
+  question: string;
+  answer: string;
+  category: string;
+  sortOrder?: number;
+}
+
+export type ContactStatus = (typeof ContactStatus)[keyof typeof ContactStatus];
+
+export const ContactStatus = {
+  unread: "unread",
+  read: "read",
+  replied: "replied",
+} as const;
+
+export interface Contact {
+  id: number;
+  name: string;
+  email: string;
+  /** @nullable */
+  phone?: string | null;
+  subject: string;
+  message: string;
+  status: ContactStatus;
+  createdAt: string;
+}
+
+export interface SubmitContactBody {
+  name: string;
+  email: string;
+  /** @nullable */
+  phone?: string | null;
+  subject: string;
+  message: string;
+}
+
+export type UpdateContactStatusBodyStatus =
+  (typeof UpdateContactStatusBodyStatus)[keyof typeof UpdateContactStatusBodyStatus];
+
+export const UpdateContactStatusBodyStatus = {
+  unread: "unread",
+  read: "read",
+  replied: "replied",
+} as const;
+
+export interface UpdateContactStatusBody {
+  status: UpdateContactStatusBodyStatus;
+}
+
+export type AttendanceRecordStatus =
+  (typeof AttendanceRecordStatus)[keyof typeof AttendanceRecordStatus];
+
+export const AttendanceRecordStatus = {
+  present: "present",
+  absent: "absent",
+  excused: "excused",
+} as const;
+
+export interface AttendanceRecord {
+  id: number;
+  enrollmentId: number;
+  date: string;
+  status: AttendanceRecordStatus;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  swimmerName?: string | null;
+  /** @nullable */
+  programName?: string | null;
+  createdAt: string;
+}
+
+export type MarkAttendanceBodyStatus =
+  (typeof MarkAttendanceBodyStatus)[keyof typeof MarkAttendanceBodyStatus];
+
+export const MarkAttendanceBodyStatus = {
+  present: "present",
+  absent: "absent",
+  excused: "excused",
+} as const;
+
+export interface MarkAttendanceBody {
+  enrollmentId: number;
+  date: string;
+  status: MarkAttendanceBodyStatus;
+  /** @nullable */
+  notes?: string | null;
+}
+
 export type AdminStatsEnrollmentsByLevelItem = {
   level: string;
   count: number;
@@ -224,4 +345,9 @@ export interface AdminStats {
 
 export type ListSessionsParams = {
   programId?: number;
+  status?: string;
+};
+
+export type ListAttendanceParams = {
+  enrollmentId?: number;
 };

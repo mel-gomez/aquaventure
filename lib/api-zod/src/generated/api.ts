@@ -143,6 +143,7 @@ export const GetProgramResponse = zod.object({
  */
 export const ListSessionsQueryParams = zod.object({
   programId: zod.coerce.number().optional(),
+  status: zod.coerce.string().optional(),
 });
 
 export const ListSessionsResponseItem = zod.object({
@@ -246,6 +247,69 @@ export const ListAnnouncementsResponseItem = zod.object({
 export const ListAnnouncementsResponse = zod.array(
   ListAnnouncementsResponseItem,
 );
+
+/**
+ * @summary List approved testimonials
+ */
+export const ListTestimonialsResponseItem = zod.object({
+  id: zod.number(),
+  parentName: zod.string(),
+  content: zod.string(),
+  rating: zod.number(),
+  approved: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+export const ListTestimonialsResponse = zod.array(ListTestimonialsResponseItem);
+
+/**
+ * @summary Submit a testimonial
+ */
+export const submitTestimonialBodyRatingMax = 5;
+
+export const SubmitTestimonialBody = zod.object({
+  parentName: zod.string(),
+  content: zod.string(),
+  rating: zod.number().min(1).max(submitTestimonialBodyRatingMax),
+});
+
+/**
+ * @summary List all FAQ entries
+ */
+export const ListFaqResponseItem = zod.object({
+  id: zod.number(),
+  question: zod.string(),
+  answer: zod.string(),
+  category: zod.string(),
+  sortOrder: zod.number(),
+  createdAt: zod.coerce.date(),
+});
+export const ListFaqResponse = zod.array(ListFaqResponseItem);
+
+/**
+ * @summary Submit a contact inquiry
+ */
+export const SubmitContactBody = zod.object({
+  name: zod.string(),
+  email: zod.string(),
+  phone: zod.string().nullish(),
+  subject: zod.string(),
+  message: zod.string(),
+});
+
+/**
+ * @summary Get attendance for current user enrollments
+ */
+export const GetMyAttendanceResponseItem = zod.object({
+  id: zod.number(),
+  enrollmentId: zod.number(),
+  date: zod.string(),
+  status: zod.enum(["present", "absent", "excused"]),
+  notes: zod.string().nullish(),
+  swimmerName: zod.string().nullish(),
+  programName: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+});
+export const GetMyAttendanceResponse = zod.array(GetMyAttendanceResponseItem);
 
 /**
  * @summary Get admin dashboard statistics
@@ -416,4 +480,165 @@ export const CreateSessionBody = zod.object({
 export const CreateAnnouncementBody = zod.object({
   title: zod.string(),
   content: zod.string(),
+});
+
+/**
+ * @summary List all testimonials (including unapproved)
+ */
+export const ListAllTestimonialsResponseItem = zod.object({
+  id: zod.number(),
+  parentName: zod.string(),
+  content: zod.string(),
+  rating: zod.number(),
+  approved: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+export const ListAllTestimonialsResponse = zod.array(
+  ListAllTestimonialsResponseItem,
+);
+
+/**
+ * @summary Approve or unapprove a testimonial
+ */
+export const ApproveTestimonialParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const ApproveTestimonialBody = zod.object({
+  approved: zod.boolean(),
+});
+
+export const ApproveTestimonialResponse = zod.object({
+  id: zod.number(),
+  parentName: zod.string(),
+  content: zod.string(),
+  rating: zod.number(),
+  approved: zod.boolean(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete a testimonial
+ */
+export const DeleteTestimonialParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary List all FAQ entries (admin)
+ */
+export const ListAdminFaqResponseItem = zod.object({
+  id: zod.number(),
+  question: zod.string(),
+  answer: zod.string(),
+  category: zod.string(),
+  sortOrder: zod.number(),
+  createdAt: zod.coerce.date(),
+});
+export const ListAdminFaqResponse = zod.array(ListAdminFaqResponseItem);
+
+/**
+ * @summary Create a FAQ entry
+ */
+export const CreateFaqBody = zod.object({
+  question: zod.string(),
+  answer: zod.string(),
+  category: zod.string(),
+  sortOrder: zod.number().optional(),
+});
+
+/**
+ * @summary Update a FAQ entry
+ */
+export const UpdateFaqParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateFaqBody = zod.object({
+  question: zod.string(),
+  answer: zod.string(),
+  category: zod.string(),
+  sortOrder: zod.number().optional(),
+});
+
+export const UpdateFaqResponse = zod.object({
+  id: zod.number(),
+  question: zod.string(),
+  answer: zod.string(),
+  category: zod.string(),
+  sortOrder: zod.number(),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Delete a FAQ entry
+ */
+export const DeleteFaqParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+/**
+ * @summary List all contact inquiries
+ */
+export const ListContactsResponseItem = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  email: zod.string(),
+  phone: zod.string().nullish(),
+  subject: zod.string(),
+  message: zod.string(),
+  status: zod.enum(["unread", "read", "replied"]),
+  createdAt: zod.coerce.date(),
+});
+export const ListContactsResponse = zod.array(ListContactsResponseItem);
+
+/**
+ * @summary Update contact status
+ */
+export const UpdateContactStatusParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateContactStatusBody = zod.object({
+  status: zod.enum(["unread", "read", "replied"]),
+});
+
+export const UpdateContactStatusResponse = zod.object({
+  id: zod.number(),
+  name: zod.string(),
+  email: zod.string(),
+  phone: zod.string().nullish(),
+  subject: zod.string(),
+  message: zod.string(),
+  status: zod.enum(["unread", "read", "replied"]),
+  createdAt: zod.coerce.date(),
+});
+
+/**
+ * @summary List all attendance records
+ */
+export const ListAttendanceQueryParams = zod.object({
+  enrollmentId: zod.coerce.number().optional(),
+});
+
+export const ListAttendanceResponseItem = zod.object({
+  id: zod.number(),
+  enrollmentId: zod.number(),
+  date: zod.string(),
+  status: zod.enum(["present", "absent", "excused"]),
+  notes: zod.string().nullish(),
+  swimmerName: zod.string().nullish(),
+  programName: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+});
+export const ListAttendanceResponse = zod.array(ListAttendanceResponseItem);
+
+/**
+ * @summary Mark attendance for an enrollment
+ */
+export const MarkAttendanceBody = zod.object({
+  enrollmentId: zod.number(),
+  date: zod.string(),
+  status: zod.enum(["present", "absent", "excused"]),
+  notes: zod.string().nullish(),
 });
