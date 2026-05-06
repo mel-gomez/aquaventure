@@ -327,6 +327,28 @@ export interface MarkAttendanceBody {
   notes?: string | null;
 }
 
+export interface ProgressRecord {
+  id: number;
+  enrollmentId: number;
+  skill: string;
+  achievedAt: string;
+  /** @nullable */
+  notes?: string | null;
+  /** @nullable */
+  swimmerName?: string | null;
+  /** @nullable */
+  programName?: string | null;
+  createdAt: string;
+}
+
+export interface LogProgressBody {
+  enrollmentId: number;
+  skill: string;
+  achievedAt: string;
+  /** @nullable */
+  notes?: string | null;
+}
+
 export type AdminStatsEnrollmentsByLevelItem = {
   level: string;
   count: number;
@@ -349,5 +371,9 @@ export type ListSessionsParams = {
 };
 
 export type ListAttendanceParams = {
+  enrollmentId?: number;
+};
+
+export type ListProgressParams = {
   enrollmentId?: number;
 };

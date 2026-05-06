@@ -33,10 +33,13 @@ import type {
   FaqEntry,
   HealthStatus,
   ListAttendanceParams,
+  ListProgressParams,
   ListSessionsParams,
+  LogProgressBody,
   LoginBody,
   MarkAttendanceBody,
   Program,
+  ProgressRecord,
   RefreshTokenBody,
   RegisterBody,
   Session,
@@ -3087,4 +3090,343 @@ export const useMarkAttendance = <
   TContext
 > => {
   return useMutation(getMarkAttendanceMutationOptions(options));
+};
+
+/**
+ * @summary Get skill progress for the authenticated user's enrollments
+ */
+export const getGetMyProgressUrl = () => {
+  return `/api/progress/my`;
+};
+
+export const getMyProgress = async (
+  options?: RequestInit,
+): Promise<ProgressRecord[]> => {
+  return customFetch<ProgressRecord[]>(getGetMyProgressUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetMyProgressQueryKey = () => {
+  return [`/api/progress/my`] as const;
+};
+
+export const getGetMyProgressQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyProgress>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyProgress>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetMyProgressQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyProgress>>> = ({
+    signal,
+  }) => getMyProgress({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMyProgress>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetMyProgressQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMyProgress>>
+>;
+export type GetMyProgressQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get skill progress for the authenticated user's enrollments
+ */
+
+export function useGetMyProgress<
+  TData = Awaited<ReturnType<typeof getMyProgress>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMyProgress>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetMyProgressQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary List skill progress (optionally filtered by enrollment)
+ */
+export const getListProgressUrl = (params?: ListProgressParams) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? "null" : value.toString());
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0
+    ? `/api/admin/progress?${stringifiedParams}`
+    : `/api/admin/progress`;
+};
+
+export const listProgress = async (
+  params?: ListProgressParams,
+  options?: RequestInit,
+): Promise<ProgressRecord[]> => {
+  return customFetch<ProgressRecord[]>(getListProgressUrl(params), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getListProgressQueryKey = (params?: ListProgressParams) => {
+  return [`/api/admin/progress`, ...(params ? [params] : [])] as const;
+};
+
+export const getListProgressQueryOptions = <
+  TData = Awaited<ReturnType<typeof listProgress>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListProgressParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProgress>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getListProgressQueryKey(params);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof listProgress>>> = ({
+    signal,
+  }) => listProgress(params, { signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof listProgress>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type ListProgressQueryResult = NonNullable<
+  Awaited<ReturnType<typeof listProgress>>
+>;
+export type ListProgressQueryError = ErrorType<unknown>;
+
+/**
+ * @summary List skill progress (optionally filtered by enrollment)
+ */
+
+export function useListProgress<
+  TData = Awaited<ReturnType<typeof listProgress>>,
+  TError = ErrorType<unknown>,
+>(
+  params?: ListProgressParams,
+  options?: {
+    query?: UseQueryOptions<
+      Awaited<ReturnType<typeof listProgress>>,
+      TError,
+      TData
+    >;
+    request?: SecondParameter<typeof customFetch>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getListProgressQueryOptions(params, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Log a skill achievement for an enrollment
+ */
+export const getLogProgressUrl = () => {
+  return `/api/admin/progress`;
+};
+
+export const logProgress = async (
+  logProgressBody: LogProgressBody,
+  options?: RequestInit,
+): Promise<ProgressRecord> => {
+  return customFetch<ProgressRecord>(getLogProgressUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(logProgressBody),
+  });
+};
+
+export const getLogProgressMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof logProgress>>,
+    TError,
+    { data: BodyType<LogProgressBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof logProgress>>,
+  TError,
+  { data: BodyType<LogProgressBody> },
+  TContext
+> => {
+  const mutationKey = ["logProgress"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof logProgress>>,
+    { data: BodyType<LogProgressBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return logProgress(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type LogProgressMutationResult = NonNullable<
+  Awaited<ReturnType<typeof logProgress>>
+>;
+export type LogProgressMutationBody = BodyType<LogProgressBody>;
+export type LogProgressMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Log a skill achievement for an enrollment
+ */
+export const useLogProgress = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof logProgress>>,
+    TError,
+    { data: BodyType<LogProgressBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof logProgress>>,
+  TError,
+  { data: BodyType<LogProgressBody> },
+  TContext
+> => {
+  return useMutation(getLogProgressMutationOptions(options));
+};
+
+/**
+ * @summary Delete a skill progress record
+ */
+export const getDeleteProgressUrl = (id: number) => {
+  return `/api/admin/progress/${id}`;
+};
+
+export const deleteProgress = async (
+  id: number,
+  options?: RequestInit,
+): Promise<ProgressRecord> => {
+  return customFetch<ProgressRecord>(getDeleteProgressUrl(id), {
+    ...options,
+    method: "DELETE",
+  });
+};
+
+export const getDeleteProgressMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteProgress>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteProgress>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  const mutationKey = ["deleteProgress"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteProgress>>,
+    { id: number }
+  > = (props) => {
+    const { id } = props ?? {};
+
+    return deleteProgress(id, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type DeleteProgressMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteProgress>>
+>;
+
+export type DeleteProgressMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Delete a skill progress record
+ */
+export const useDeleteProgress = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteProgress>>,
+    TError,
+    { id: number },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof deleteProgress>>,
+  TError,
+  { id: number },
+  TContext
+> => {
+  return useMutation(getDeleteProgressMutationOptions(options));
 };

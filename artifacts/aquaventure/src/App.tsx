@@ -21,6 +21,7 @@ import PortalDashboard from "@/pages/portal/index";
 import EnrollPage from "@/pages/portal/enroll";
 import PortalAttendance from "@/pages/portal/attendance";
 import PortalProfile from "@/pages/portal/profile";
+import PortalProgress from "@/pages/portal/progress";
 
 // Admin
 import AdminDashboard from "@/pages/admin/index";
@@ -33,6 +34,7 @@ import AdminTestimonials from "@/pages/admin/testimonials";
 import AdminFaq from "@/pages/admin/faq";
 import AdminContacts from "@/pages/admin/contacts";
 import AdminAttendance from "@/pages/admin/attendance";
+import AdminProgress from "@/pages/admin/progress";
 
 const queryClient = new QueryClient();
 
@@ -60,6 +62,9 @@ function Router() {
       </Route>
       <Route path="/portal/profile">
         <ProtectedRoute><PortalProfile /></ProtectedRoute>
+      </Route>
+      <Route path="/portal/progress">
+        <ProtectedRoute><PortalProgress /></ProtectedRoute>
       </Route>
 
       {/* Admin Dashboard */}
@@ -92,6 +97,9 @@ function Router() {
       </Route>
       <Route path="/admin/attendance">
         <ProtectedRoute adminOnly><AdminAttendance /></ProtectedRoute>
+      </Route>
+      <Route path="/admin/progress">
+        <ProtectedRoute adminOnly><AdminProgress /></ProtectedRoute>
       </Route>
 
       <Route component={NotFound} />

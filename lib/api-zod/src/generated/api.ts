@@ -642,3 +642,65 @@ export const MarkAttendanceBody = zod.object({
   status: zod.enum(["present", "absent", "excused"]),
   notes: zod.string().nullish(),
 });
+
+/**
+ * @summary Get skill progress for the authenticated user's enrollments
+ */
+export const GetMyProgressResponseItem = zod.object({
+  id: zod.number(),
+  enrollmentId: zod.number(),
+  skill: zod.string(),
+  achievedAt: zod.string(),
+  notes: zod.string().nullish(),
+  swimmerName: zod.string().nullish(),
+  programName: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+});
+export const GetMyProgressResponse = zod.array(GetMyProgressResponseItem);
+
+/**
+ * @summary List skill progress (optionally filtered by enrollment)
+ */
+export const ListProgressQueryParams = zod.object({
+  enrollmentId: zod.coerce.number().optional(),
+});
+
+export const ListProgressResponseItem = zod.object({
+  id: zod.number(),
+  enrollmentId: zod.number(),
+  skill: zod.string(),
+  achievedAt: zod.string(),
+  notes: zod.string().nullish(),
+  swimmerName: zod.string().nullish(),
+  programName: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+});
+export const ListProgressResponse = zod.array(ListProgressResponseItem);
+
+/**
+ * @summary Log a skill achievement for an enrollment
+ */
+export const LogProgressBody = zod.object({
+  enrollmentId: zod.number(),
+  skill: zod.string(),
+  achievedAt: zod.string(),
+  notes: zod.string().nullish(),
+});
+
+/**
+ * @summary Delete a skill progress record
+ */
+export const DeleteProgressParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const DeleteProgressResponse = zod.object({
+  id: zod.number(),
+  enrollmentId: zod.number(),
+  skill: zod.string(),
+  achievedAt: zod.string(),
+  notes: zod.string().nullish(),
+  swimmerName: zod.string().nullish(),
+  programName: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+});

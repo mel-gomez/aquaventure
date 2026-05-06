@@ -38,6 +38,7 @@ Full-stack web application for Aquaventure Swim School (est. 2019) — a childre
 - `/portal/enroll` — Enrollment form (pick session, enter swimmer details)
 - `/portal/attendance` — Swimmer attendance history + rate
 - `/portal/profile` — Edit name, phone; view role + email
+- `/portal/progress` — View swimmer skill milestones logged by coaches
 
 ### Admin Dashboard (protected, admin-only)
 - `/admin` — Stats cards, enrollment bar chart, recent enrollments
@@ -47,6 +48,7 @@ Full-stack web application for Aquaventure Swim School (est. 2019) — a childre
 - `/admin/sessions` — Create sessions
 - `/admin/announcements` — Post announcements
 - `/admin/attendance` — Mark student attendance (present/absent/excused)
+- `/admin/progress` — Log/delete swimmer skill achievements (19 preset skills + custom)
 - `/admin/testimonials` — Approve/hide/delete parent testimonials
 - `/admin/faq` — Add/delete FAQ entries
 - `/admin/contacts` — View contact form submissions, mark read/replied
@@ -58,7 +60,7 @@ See `lib/api-spec/openapi.yaml` for full route list. Key route files:
 
 ## Database Schema (`lib/db/src/schema`)
 Tables: `users`, `programs`, `sessions`, `enrollments`, `announcements`,
-`testimonials`, `faq`, `contacts`, `attendance`
+`testimonials`, `faq`, `contacts`, `attendance`, `progress`
 
 ## Seed Accounts
 - **Admin**: admin@aquaventure.com / admin123

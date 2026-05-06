@@ -7,3 +7,4 @@ export * from "./testimonials";
 export * from "./faq";
 export * from "./contacts";
 export * from "./attendance";
+export * from "./progress";

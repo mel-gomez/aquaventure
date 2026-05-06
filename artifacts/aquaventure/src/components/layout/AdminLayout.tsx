@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import logo from "@assets/image_1777978704079.png";
 import {
   LayoutDashboard, Users, ClipboardList, BookOpen, Calendar as CalendarIcon,
-  Megaphone, LogOut, Menu, Star, HelpCircle, Mail, ClipboardCheck
+  Megaphone, LogOut, Menu, Star, HelpCircle, Mail, ClipboardCheck, Trophy
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
@@ -18,6 +18,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
     { name: "Swimmers", href: "/admin/swimmers", icon: Users },
     { name: "Enrollments", href: "/admin/enrollments", icon: ClipboardList },
     { name: "Attendance", href: "/admin/attendance", icon: ClipboardCheck },
+    { name: "Progress", href: "/admin/progress", icon: Trophy },
     { name: "Programs", href: "/admin/programs", icon: BookOpen },
     { name: "Sessions", href: "/admin/sessions", icon: CalendarIcon },
     { name: "Announcements", href: "/admin/announcements", icon: Megaphone },

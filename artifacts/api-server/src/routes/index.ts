@@ -11,6 +11,7 @@ import testimonialsRouter from "./testimonials";
 import faqRouter from "./faq";
 import contactsRouter from "./contacts";
 import attendanceRouter from "./attendance";
+import progressRouter from "./progress";
 
 const router: IRouter = Router();
 
@@ -26,5 +27,6 @@ router.use(testimonialsRouter);
 router.use(faqRouter);
 router.use(contactsRouter);
 router.use(attendanceRouter);
+router.use(progressRouter);
 
 export default router;
