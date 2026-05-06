@@ -2,7 +2,7 @@ import { Link, useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { Waves } from "lucide-react";
 
-const hideOnPaths = ["/login", "/register", "/portal", "/portal/enroll", "/portal/attendance", "/admin"];
+const hideOnPaths = ["/login", "/register", "/portal", "/admin"];
 
 export function FloatingEnrollButton() {
   const [location] = useLocation();

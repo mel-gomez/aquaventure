@@ -8,71 +8,76 @@ Full-stack web application for Aquaventure Swim School (est. 2019) — a childre
 
 - **Monorepo tool**: pnpm workspaces
 - **Node.js version**: 24
-- **Package manager**: pnpm
-- **TypeScript version**: 5.9
-- **Frontend**: React + Vite (App Router-style with wouter), Tailwind CSS, Framer Motion
+- **Frontend**: React + Vite (wouter routing), Tailwind CSS, Framer Motion, Recharts
 - **Backend**: Express.js v5
 - **Database**: PostgreSQL + Drizzle ORM
 - **Authentication**: JWT (access + refresh tokens via jsonwebtoken + bcryptjs)
-- **Validation**: Zod (`zod/v4`), `drizzle-zod`
-- **API codegen**: Orval (from OpenAPI spec)
-- **Build**: esbuild (CJS bundle)
+- **Validation**: Zod (server routes use `"zod"` directly, NOT `"zod/v4"`), `drizzle-zod`
+- **API codegen**: Orval (from OpenAPI spec in `lib/api-spec/openapi.yaml`)
+- **Build**: esbuild
 
 ## Key Commands
 
 - `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from OpenAPI spec
+- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks + Zod schemas
 - `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
+- `pnpm --filter @workspace/scripts run seed-new-tables` — seed testimonials + FAQ
 
 ## App Structure
 
-### Frontend (`artifacts/aquaventure`)
-- `/` — Public landing page with ocean theme, wave animations, school logo
-- `/programs` — Browse all swim programs
-- `/login`, `/register` — Authentication pages
-- `/portal` — Parent/swimmer portal (protected): enrollments, announcements
-- `/portal/enroll` — Enrollment form (protected)
-- `/admin` — Admin dashboard (protected, admin-only): stats, charts
-- `/admin/swimmers` — Manage swimmers/parents
-- `/admin/enrollments` — Manage all enrollments with status updates
-- `/admin/programs` — Create and view swim programs
-- `/admin/sessions` — Create and view sessions
+### Public Frontend (`artifacts/aquaventure`)
+- `/` — Landing page: hero, features, programs, local identity, testimonials (from DB), CTA
+- `/programs` — Browse all swim programs with pricing
+- `/schedule` — Class schedule with level filters
+- `/about` — School story, coaches, mission
+- `/faq` — Accordion FAQ from DB (category filters)
+- `/contact` — Contact form + address/phone/email
+
+### Parent Portal (protected)
+- `/portal` — Dashboard: active enrollments + cancel button, announcements
+- `/portal/enroll` — Enrollment form (pick session, enter swimmer details)
+- `/portal/attendance` — Swimmer attendance history + rate
+- `/portal/profile` — Edit name, phone; view role + email
+
+### Admin Dashboard (protected, admin-only)
+- `/admin` — Stats cards, enrollment bar chart, recent enrollments
+- `/admin/swimmers` — User directory
+- `/admin/enrollments` — Confirm/cancel enrollments
+- `/admin/programs` — Create programs
+- `/admin/sessions` — Create sessions
 - `/admin/announcements` — Post announcements
+- `/admin/attendance` — Mark student attendance (present/absent/excused)
+- `/admin/testimonials` — Approve/hide/delete parent testimonials
+- `/admin/faq` — Add/delete FAQ entries
+- `/admin/contacts` — View contact form submissions, mark read/replied
 
 ### Backend (`artifacts/api-server`)
-Routes:
-- `POST /api/auth/register` — Register new user
-- `POST /api/auth/login` — Login
-- `POST /api/auth/refresh` — Refresh JWT tokens
-- `GET/PATCH /api/profile` — User profile
-- `GET /api/programs`, `GET /api/programs/:id` — Programs
-- `GET /api/sessions`, `GET /api/sessions/:id` — Sessions
-- `POST /api/enrollments` — Enroll in a session
-- `GET /api/enrollments/my` — User's enrollments
-- `DELETE /api/enrollments/:id` — Cancel enrollment
-- `GET /api/announcements` — Public announcements
-- `GET /api/admin/stats` — Admin dashboard stats
-- `GET /api/admin/swimmers` — All users
-- `GET /api/admin/enrollments` — All enrollments
-- `PATCH /api/admin/enrollments/:id/status` — Update enrollment status
-- `POST /api/admin/programs` — Create program
-- `POST /api/admin/sessions` — Create session
-- `POST /api/admin/announcements` — Post announcement
+See `lib/api-spec/openapi.yaml` for full route list. Key route files:
+`auth.ts`, `profile.ts`, `programs.ts`, `sessions.ts`, `enrollments.ts`,
+`announcements.ts`, `testimonials.ts`, `faq.ts`, `contacts.ts`, `attendance.ts`
 
-## Database Schema (`lib/db`)
-Tables: `users`, `programs`, `sessions`, `enrollments`, `announcements`
+## Database Schema (`lib/db/src/schema`)
+Tables: `users`, `programs`, `sessions`, `enrollments`, `announcements`,
+`testimonials`, `faq`, `contacts`, `attendance`
 
 ## Seed Accounts
 - **Admin**: admin@aquaventure.com / admin123
 - **Parent**: maria.santos@gmail.com / parent123
 - **Parent**: jose.reyes@gmail.com / parent123
 
-## Design
-- Ocean gradient palette: deep navy (#0a1628) → aqua (#00c4cc)
-- Glassmorphism card accents
-- CSS wave animations in hero section
-- Framer Motion scroll animations
-- Aquaventure Giants logo prominently featured
+## Architecture Decisions
+- Server routes import `zod` (not `zod/v4`) — esbuild can't resolve the `/v4` subpath
+- API client hooks generated by Orval into `lib/api-client-react/src/generated/`
+- `zod` added as explicit dep to `@workspace/api-server` for inline validation in new routes
+- FloatingEnrollButton hides on all `/portal*` and `/admin*` paths via `startsWith`
 
-See the `pnpm-workspace` skill for workspace structure, TypeScript setup, and package details.
+## Design
+- Ocean gradient palette: deep navy (#0a1628) → aqua (#00c4cc), accent `#00c4cc`
+- Glassmorphism card accents, CSS wave SVG pattern in hero sections
+- Framer Motion scroll animations throughout
+- Aquaventure Giants logo: `attached_assets/image_1777978704079.png` via `@assets` alias — never apply `brightness-0 invert`
+
+## Gotchas
+- Logo in admin sidebar and hero: do NOT apply `brightness-0 invert` (it's already colored)
+- `pricePerSession` stored as `numeric` in DB — use `parseFloat()` when reading in routes
+- Never import from `"zod/v4"` in server code — use `"zod"` only

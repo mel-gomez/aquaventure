@@ -92,7 +92,7 @@ export default function Register() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
-                    <FormControl><Input placeholder="name@example.com" {...field} /></FormControl>
+                    <FormControl><Input placeholder="name@example.com" autoComplete="email" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -114,7 +114,7 @@ export default function Register() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Password</FormLabel>
-                    <FormControl><Input type="password" placeholder="••••••••" {...field} /></FormControl>
+                    <FormControl><Input type="password" placeholder="••••••••" autoComplete="new-password" {...field} /></FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

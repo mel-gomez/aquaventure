@@ -20,6 +20,7 @@ import Contact from "@/pages/contact";
 import PortalDashboard from "@/pages/portal/index";
 import EnrollPage from "@/pages/portal/enroll";
 import PortalAttendance from "@/pages/portal/attendance";
+import PortalProfile from "@/pages/portal/profile";
 
 // Admin
 import AdminDashboard from "@/pages/admin/index";
@@ -56,6 +57,9 @@ function Router() {
       </Route>
       <Route path="/portal/attendance">
         <ProtectedRoute><PortalAttendance /></ProtectedRoute>
+      </Route>
+      <Route path="/portal/profile">
+        <ProtectedRoute><PortalProfile /></ProtectedRoute>
       </Route>
 
       {/* Admin Dashboard */}

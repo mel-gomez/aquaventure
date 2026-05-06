@@ -1,15 +1,31 @@
-import { useGetMyEnrollments, useListAnnouncements } from "@workspace/api-client-react";
+import { useGetMyEnrollments, useListAnnouncements, useCancelEnrollment } from "@workspace/api-client-react";
 import { PortalLayout } from "@/components/layout/PortalLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { Calendar, MapPin, Clock, Info, Megaphone } from "lucide-react";
+import { Calendar, MapPin, Clock, Info, Megaphone, XCircle } from "lucide-react";
 import { format } from "date-fns";
+import { useToast } from "@/hooks/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function PortalDashboard() {
   const { data: enrollments, isLoading: enrollmentsLoading } = useGetMyEnrollments();
   const { data: announcements, isLoading: announcementsLoading } = useListAnnouncements();
+  const cancelEnrollment = useCancelEnrollment();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  const handleCancel = async (id: number) => {
+    if (!confirm("Cancel this enrollment? This cannot be undone.")) return;
+    try {
+      await cancelEnrollment.mutateAsync({ id });
+      toast({ title: "Enrollment cancelled successfully" });
+      queryClient.invalidateQueries({ queryKey: ["/api/enrollments/my"] });
+    } catch {
+      toast({ title: "Failed to cancel enrollment", variant: "destructive" });
+    }
+  };
 
   return (
     <PortalLayout>
@@ -69,6 +85,19 @@ export default function PortalDashboard() {
                             </div>
                           )}
                         </div>
+                        {(enrollment.status === "pending" || enrollment.status === "confirmed") && (
+                          <div className="shrink-0 self-start sm:self-center">
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10 flex items-center gap-1"
+                              onClick={() => handleCancel(enrollment.id)}
+                              disabled={cancelEnrollment.isPending}
+                            >
+                              <XCircle className="w-4 h-4" /> Cancel
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>

@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { LayoutDashboard, FilePlus, ClipboardCheck } from "lucide-react";
+import { LayoutDashboard, FilePlus, ClipboardCheck, UserCircle2 } from "lucide-react";
 
 export function PortalLayout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
@@ -11,6 +11,7 @@ export function PortalLayout({ children }: { children: ReactNode }) {
     { name: "My Dashboard", href: "/portal", icon: LayoutDashboard },
     { name: "Enroll in Class", href: "/portal/enroll", icon: FilePlus },
     { name: "Attendance", href: "/portal/attendance", icon: ClipboardCheck },
+    { name: "My Profile", href: "/portal/profile", icon: UserCircle2 },
   ];
 
   return (
