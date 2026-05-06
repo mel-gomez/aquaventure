@@ -31,6 +31,10 @@ tags:
     description: Attendance records
   - name: progress
     description: Swimmer skill progress
+  - name: swimmers
+    description: Swimmer profiles
+  - name: storage
+    description: Object storage upload and serving endpoints
   - name: admin
     description: Admin operations
 
@@ -882,6 +886,92 @@ paths:
               schema:
                 $ref: "#/components/schemas/AttendanceRecord"
 
+  /swimmers/my:
+    get:
+      operationId: getMySwimmerProfiles
+      tags: [swimmers]
+      summary: Get swimmer profiles for the authenticated user
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Swimmer profiles
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SwimmerProfile"
+
+  /swimmers/{id}:
+    patch:
+      operationId: updateSwimmerProfile
+      tags: [swimmers]
+      summary: Create or update a swimmer profile
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpsertSwimmerProfileBody"
+      responses:
+        "200":
+          description: Updated swimmer profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SwimmerProfile"
+
+  /swimmers:
+    post:
+      operationId: createSwimmerProfile
+      tags: [swimmers]
+      summary: Create a swimmer profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpsertSwimmerProfileBody"
+      responses:
+        "201":
+          description: Created swimmer profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SwimmerProfile"
+
+  /storage/uploads/request-url:
+    post:
+      tags: [storage]
+      operationId: requestUploadUrl
+      summary: Request a presigned URL for file upload
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadUrlRequest"
+      responses:
+        "200":
+          description: Presigned upload URL generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadUrlResponse"
+
   /progress/my:
     get:
       operationId: getMyProgress
@@ -1053,6 +1143,8 @@ components:
           type: string
         phone:
           type: ["string", "null"]
+        avatarUrl:
+          type: ["string", "null"]
         role:
           type: string
           enum: [admin, parent, swimmer]
@@ -1076,6 +1168,71 @@ components:
           type: string
         phone:
           type: ["string", "null"]
+        avatarUrl:
+          type: ["string", "null"]
+
+    SwimmerProfile:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        swimmerName:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        level:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - userId
+        - swimmerName
+        - createdAt
+        - updatedAt
+
+    UpsertSwimmerProfileBody:
+      type: object
+      properties:
+        swimmerName:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        bio:
+          type: ["string", "null"]
+        level:
+          type: ["string", "null"]
+      required:
+        - swimmerName
+
+    UploadUrlRequest:
+      type: object
+      required: [name, size, contentType]
+      properties:
+        name:
+          type: string
+        size:
+          type: integer
+        contentType:
+          type: string
+
+    UploadUrlResponse:
+      type: object
+      required: [uploadURL, objectPath]
+      properties:
+        uploadURL:
+          type: string
+          format: uri
+        objectPath:
+          type: string
 
     Program:
       type: object

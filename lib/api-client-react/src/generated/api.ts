@@ -45,10 +45,14 @@ import type {
   Session,
   SubmitContactBody,
   SubmitTestimonialBody,
+  SwimmerProfile,
   Testimonial,
   UpdateContactStatusBody,
   UpdateEnrollmentStatusBody,
   UpdateProfileBody,
+  UploadUrlRequest,
+  UploadUrlResponse,
+  UpsertSwimmerProfileBody,
   User,
 } from "./api.schemas";
 
@@ -3090,6 +3094,342 @@ export const useMarkAttendance = <
   TContext
 > => {
   return useMutation(getMarkAttendanceMutationOptions(options));
+};
+
+/**
+ * @summary Get swimmer profiles for the authenticated user
+ */
+export const getGetMySwimmerProfilesUrl = () => {
+  return `/api/swimmers/my`;
+};
+
+export const getMySwimmerProfiles = async (
+  options?: RequestInit,
+): Promise<SwimmerProfile[]> => {
+  return customFetch<SwimmerProfile[]>(getGetMySwimmerProfilesUrl(), {
+    ...options,
+    method: "GET",
+  });
+};
+
+export const getGetMySwimmerProfilesQueryKey = () => {
+  return [`/api/swimmers/my`] as const;
+};
+
+export const getGetMySwimmerProfilesQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMySwimmerProfiles>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMySwimmerProfiles>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetMySwimmerProfilesQueryKey();
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof getMySwimmerProfiles>>
+  > = ({ signal }) => getMySwimmerProfiles({ signal, ...requestOptions });
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMySwimmerProfiles>>,
+    TError,
+    TData
+  > & { queryKey: QueryKey };
+};
+
+export type GetMySwimmerProfilesQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMySwimmerProfiles>>
+>;
+export type GetMySwimmerProfilesQueryError = ErrorType<unknown>;
+
+/**
+ * @summary Get swimmer profiles for the authenticated user
+ */
+
+export function useGetMySwimmerProfiles<
+  TData = Awaited<ReturnType<typeof getMySwimmerProfiles>>,
+  TError = ErrorType<unknown>,
+>(options?: {
+  query?: UseQueryOptions<
+    Awaited<ReturnType<typeof getMySwimmerProfiles>>,
+    TError,
+    TData
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+  const queryOptions = getGetMySwimmerProfilesQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: QueryKey;
+  };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+/**
+ * @summary Create or update a swimmer profile
+ */
+export const getUpdateSwimmerProfileUrl = (id: number) => {
+  return `/api/swimmers/${id}`;
+};
+
+export const updateSwimmerProfile = async (
+  id: number,
+  upsertSwimmerProfileBody: UpsertSwimmerProfileBody,
+  options?: RequestInit,
+): Promise<SwimmerProfile> => {
+  return customFetch<SwimmerProfile>(getUpdateSwimmerProfileUrl(id), {
+    ...options,
+    method: "PATCH",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(upsertSwimmerProfileBody),
+  });
+};
+
+export const getUpdateSwimmerProfileMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateSwimmerProfile>>,
+    TError,
+    { id: number; data: BodyType<UpsertSwimmerProfileBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof updateSwimmerProfile>>,
+  TError,
+  { id: number; data: BodyType<UpsertSwimmerProfileBody> },
+  TContext
+> => {
+  const mutationKey = ["updateSwimmerProfile"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateSwimmerProfile>>,
+    { id: number; data: BodyType<UpsertSwimmerProfileBody> }
+  > = (props) => {
+    const { id, data } = props ?? {};
+
+    return updateSwimmerProfile(id, data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type UpdateSwimmerProfileMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateSwimmerProfile>>
+>;
+export type UpdateSwimmerProfileMutationBody =
+  BodyType<UpsertSwimmerProfileBody>;
+export type UpdateSwimmerProfileMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create or update a swimmer profile
+ */
+export const useUpdateSwimmerProfile = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof updateSwimmerProfile>>,
+    TError,
+    { id: number; data: BodyType<UpsertSwimmerProfileBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof updateSwimmerProfile>>,
+  TError,
+  { id: number; data: BodyType<UpsertSwimmerProfileBody> },
+  TContext
+> => {
+  return useMutation(getUpdateSwimmerProfileMutationOptions(options));
+};
+
+/**
+ * @summary Create a swimmer profile
+ */
+export const getCreateSwimmerProfileUrl = () => {
+  return `/api/swimmers`;
+};
+
+export const createSwimmerProfile = async (
+  upsertSwimmerProfileBody: UpsertSwimmerProfileBody,
+  options?: RequestInit,
+): Promise<SwimmerProfile> => {
+  return customFetch<SwimmerProfile>(getCreateSwimmerProfileUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(upsertSwimmerProfileBody),
+  });
+};
+
+export const getCreateSwimmerProfileMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createSwimmerProfile>>,
+    TError,
+    { data: BodyType<UpsertSwimmerProfileBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createSwimmerProfile>>,
+  TError,
+  { data: BodyType<UpsertSwimmerProfileBody> },
+  TContext
+> => {
+  const mutationKey = ["createSwimmerProfile"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createSwimmerProfile>>,
+    { data: BodyType<UpsertSwimmerProfileBody> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createSwimmerProfile(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateSwimmerProfileMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createSwimmerProfile>>
+>;
+export type CreateSwimmerProfileMutationBody =
+  BodyType<UpsertSwimmerProfileBody>;
+export type CreateSwimmerProfileMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Create a swimmer profile
+ */
+export const useCreateSwimmerProfile = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createSwimmerProfile>>,
+    TError,
+    { data: BodyType<UpsertSwimmerProfileBody> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof createSwimmerProfile>>,
+  TError,
+  { data: BodyType<UpsertSwimmerProfileBody> },
+  TContext
+> => {
+  return useMutation(getCreateSwimmerProfileMutationOptions(options));
+};
+
+/**
+ * @summary Request a presigned URL for file upload
+ */
+export const getRequestUploadUrlUrl = () => {
+  return `/api/storage/uploads/request-url`;
+};
+
+export const requestUploadUrl = async (
+  uploadUrlRequest: UploadUrlRequest,
+  options?: RequestInit,
+): Promise<UploadUrlResponse> => {
+  return customFetch<UploadUrlResponse>(getRequestUploadUrlUrl(), {
+    ...options,
+    method: "POST",
+    headers: { "Content-Type": "application/json", ...options?.headers },
+    body: JSON.stringify(uploadUrlRequest),
+  });
+};
+
+export const getRequestUploadUrlMutationOptions = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    TError,
+    { data: BodyType<UploadUrlRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof requestUploadUrl>>,
+  TError,
+  { data: BodyType<UploadUrlRequest> },
+  TContext
+> => {
+  const mutationKey = ["requestUploadUrl"];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    { data: BodyType<UploadUrlRequest> }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return requestUploadUrl(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RequestUploadUrlMutationResult = NonNullable<
+  Awaited<ReturnType<typeof requestUploadUrl>>
+>;
+export type RequestUploadUrlMutationBody = BodyType<UploadUrlRequest>;
+export type RequestUploadUrlMutationError = ErrorType<unknown>;
+
+/**
+ * @summary Request a presigned URL for file upload
+ */
+export const useRequestUploadUrl = <
+  TError = ErrorType<unknown>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof requestUploadUrl>>,
+    TError,
+    { data: BodyType<UploadUrlRequest> },
+    TContext
+  >;
+  request?: SecondParameter<typeof customFetch>;
+}): UseMutationResult<
+  Awaited<ReturnType<typeof requestUploadUrl>>,
+  TError,
+  { data: BodyType<UploadUrlRequest> },
+  TContext
+> => {
+  return useMutation(getRequestUploadUrlMutationOptions(options));
 };
 
 /**

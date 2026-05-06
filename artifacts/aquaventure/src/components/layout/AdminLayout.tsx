@@ -5,13 +5,42 @@ import { Button } from "@/components/ui/button";
 import logo from "@assets/image_1777978704079.png";
 import {
   LayoutDashboard, Users, ClipboardList, BookOpen, Calendar as CalendarIcon,
-  Megaphone, LogOut, Menu, Star, HelpCircle, Mail, ClipboardCheck, Trophy
+  Megaphone, LogOut, Menu, Star, HelpCircle, Mail, ClipboardCheck, Trophy,
+  ShieldCheck, UserCircle2
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
+const ROLE_CONFIG = {
+  admin: {
+    label: "Admin",
+    icon: ShieldCheck,
+    gradient: "from-rose-500 to-pink-600",
+    glow: "shadow-rose-500/30",
+    dot: "bg-rose-400",
+  },
+  parent: {
+    label: "Parent",
+    icon: UserCircle2,
+    gradient: "from-blue-500 to-cyan-600",
+    glow: "shadow-blue-500/30",
+    dot: "bg-blue-400",
+  },
+  swimmer: {
+    label: "Swimmer",
+    icon: UserCircle2,
+    gradient: "from-emerald-500 to-teal-600",
+    glow: "shadow-emerald-500/30",
+    dot: "bg-emerald-400",
+  },
+};
+
 export function AdminLayout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+
+  const roleKey = (user?.role ?? "admin") as keyof typeof ROLE_CONFIG;
+  const roleConfig = ROLE_CONFIG[roleKey] ?? ROLE_CONFIG.admin;
+  const RoleIcon = roleConfig.icon;
 
   const navigation = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -29,6 +58,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
+      {/* Logo header */}
       <div className="p-5 flex items-center gap-3 border-b border-white/10">
         <img src={logo} alt="Logo" className="w-9 h-9 object-contain" />
         <div>
@@ -36,7 +66,34 @@ export function AdminLayout({ children }: { children: ReactNode }) {
           <div className="text-white/50 text-xs">Aquaventure Giants</div>
         </div>
       </div>
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+
+      {/* User identity card */}
+      {user && (
+        <div className="mx-3 mt-3 mb-1 rounded-xl overflow-hidden">
+          <div className={`bg-gradient-to-r ${roleConfig.gradient} p-px rounded-xl shadow-lg ${roleConfig.glow}`}>
+            <div className="bg-sidebar/90 backdrop-blur-sm rounded-[11px] px-3.5 py-3 flex items-center gap-3">
+              {/* Avatar */}
+              <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${roleConfig.gradient} flex items-center justify-center text-white text-xs font-bold shadow-inner shrink-0`}>
+                {user.firstName?.charAt(0)}{user.lastName?.charAt(0)}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-white text-xs font-semibold truncate leading-tight">
+                  {user.firstName} {user.lastName}
+                </div>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <span className={`inline-block w-1.5 h-1.5 rounded-full ${roleConfig.dot} animate-pulse`} />
+                  <span className="text-white/60 text-[10px] font-medium uppercase tracking-wider">
+                    {roleConfig.label}
+                  </span>
+                </div>
+              </div>
+              <RoleIcon className="w-4 h-4 text-white/40 shrink-0" />
+            </div>
+          </div>
+        </div>
+      )}
+
+      <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
         {navigation.map((item) => {
           const isActive = location === item.href;
           return (
@@ -65,16 +122,24 @@ export function AdminLayout({ children }: { children: ReactNode }) {
           <img src={logo} alt="Logo" className="w-8 h-8 object-contain" />
           <span className="font-bold text-sm text-white">Admin</span>
         </div>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
-              <Menu className="h-5 w-5" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="p-0 w-64 bg-sidebar border-r-0">
-            <SidebarContent />
-          </SheetContent>
-        </Sheet>
+        <div className="flex items-center gap-2">
+          {user && (
+            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r ${roleConfig.gradient} text-white text-xs font-semibold shadow-md`}>
+              <span className={`inline-block w-1.5 h-1.5 rounded-full bg-white/70 animate-pulse`} />
+              {roleConfig.label}
+            </span>
+          )}
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
+                <Menu className="h-5 w-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="p-0 w-64 bg-sidebar border-r-0">
+              <SidebarContent />
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
       
       <div className="hidden md:block w-64 flex-shrink-0">

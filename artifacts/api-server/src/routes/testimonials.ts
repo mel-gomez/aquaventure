@@ -43,7 +43,7 @@ router.get("/admin/testimonials", requireAuth, requireAdmin, async (_req, res): 
 });
 
 router.patch("/admin/testimonials/:id/approve", requireAuth, requireAdmin, async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const { approved } = req.body as { approved: boolean };
   const [updated] = await db
     .update(testimonialsTable)
@@ -55,7 +55,7 @@ router.patch("/admin/testimonials/:id/approve", requireAuth, requireAdmin, async
 });
 
 router.delete("/admin/testimonials/:id", requireAuth, requireAdmin, async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const [deleted] = await db
     .delete(testimonialsTable)
     .where(eq(testimonialsTable.id, id))

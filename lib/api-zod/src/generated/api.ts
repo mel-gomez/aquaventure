@@ -43,6 +43,7 @@ export const LoginResponse = zod.object({
     firstName: zod.string(),
     lastName: zod.string(),
     phone: zod.string().nullish(),
+    avatarUrl: zod.string().nullish(),
     role: zod.enum(["admin", "parent", "swimmer"]),
     createdAt: zod.coerce.date(),
   }),
@@ -64,6 +65,7 @@ export const RefreshTokenResponse = zod.object({
     firstName: zod.string(),
     lastName: zod.string(),
     phone: zod.string().nullish(),
+    avatarUrl: zod.string().nullish(),
     role: zod.enum(["admin", "parent", "swimmer"]),
     createdAt: zod.coerce.date(),
   }),
@@ -78,6 +80,7 @@ export const GetProfileResponse = zod.object({
   firstName: zod.string(),
   lastName: zod.string(),
   phone: zod.string().nullish(),
+  avatarUrl: zod.string().nullish(),
   role: zod.enum(["admin", "parent", "swimmer"]),
   createdAt: zod.coerce.date(),
 });
@@ -89,6 +92,7 @@ export const UpdateProfileBody = zod.object({
   firstName: zod.string().optional(),
   lastName: zod.string().optional(),
   phone: zod.string().nullish(),
+  avatarUrl: zod.string().nullish(),
 });
 
 export const UpdateProfileResponse = zod.object({
@@ -97,6 +101,7 @@ export const UpdateProfileResponse = zod.object({
   firstName: zod.string(),
   lastName: zod.string(),
   phone: zod.string().nullish(),
+  avatarUrl: zod.string().nullish(),
   role: zod.enum(["admin", "parent", "swimmer"]),
   createdAt: zod.coerce.date(),
 });
@@ -368,6 +373,7 @@ export const ListSwimmersResponseItem = zod.object({
   firstName: zod.string(),
   lastName: zod.string(),
   phone: zod.string().nullish(),
+  avatarUrl: zod.string().nullish(),
   role: zod.enum(["admin", "parent", "swimmer"]),
   createdAt: zod.coerce.date(),
 });
@@ -641,6 +647,72 @@ export const MarkAttendanceBody = zod.object({
   date: zod.string(),
   status: zod.enum(["present", "absent", "excused"]),
   notes: zod.string().nullish(),
+});
+
+/**
+ * @summary Get swimmer profiles for the authenticated user
+ */
+export const GetMySwimmerProfilesResponseItem = zod.object({
+  id: zod.number(),
+  userId: zod.number(),
+  swimmerName: zod.string(),
+  avatarUrl: zod.string().nullish(),
+  bio: zod.string().nullish(),
+  level: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+export const GetMySwimmerProfilesResponse = zod.array(
+  GetMySwimmerProfilesResponseItem,
+);
+
+/**
+ * @summary Create or update a swimmer profile
+ */
+export const UpdateSwimmerProfileParams = zod.object({
+  id: zod.coerce.number(),
+});
+
+export const UpdateSwimmerProfileBody = zod.object({
+  swimmerName: zod.string(),
+  avatarUrl: zod.string().nullish(),
+  bio: zod.string().nullish(),
+  level: zod.string().nullish(),
+});
+
+export const UpdateSwimmerProfileResponse = zod.object({
+  id: zod.number(),
+  userId: zod.number(),
+  swimmerName: zod.string(),
+  avatarUrl: zod.string().nullish(),
+  bio: zod.string().nullish(),
+  level: zod.string().nullish(),
+  createdAt: zod.coerce.date(),
+  updatedAt: zod.coerce.date(),
+});
+
+/**
+ * @summary Create a swimmer profile
+ */
+export const CreateSwimmerProfileBody = zod.object({
+  swimmerName: zod.string(),
+  avatarUrl: zod.string().nullish(),
+  bio: zod.string().nullish(),
+  level: zod.string().nullish(),
+});
+
+/**
+ * @summary Request a presigned URL for file upload
+ */
+export const RequestUploadUrlBody = zod.object({
+  name: zod.string(),
+  size: zod.number(),
+  contentType: zod.string(),
+});
+
+export const RequestUploadUrlResponse = zod.object({
+  uploadURL: zod.string().url(),
+  objectPath: zod.string(),
 });
 
 /**

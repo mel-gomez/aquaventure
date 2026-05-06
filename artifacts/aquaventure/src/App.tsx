@@ -22,6 +22,7 @@ import EnrollPage from "@/pages/portal/enroll";
 import PortalAttendance from "@/pages/portal/attendance";
 import PortalProfile from "@/pages/portal/profile";
 import PortalProgress from "@/pages/portal/progress";
+import PortalSwimmers from "@/pages/portal/swimmers";
 
 // Admin
 import AdminDashboard from "@/pages/admin/index";
@@ -65,6 +66,9 @@ function Router() {
       </Route>
       <Route path="/portal/progress">
         <ProtectedRoute><PortalProgress /></ProtectedRoute>
+      </Route>
+      <Route path="/portal/swimmers">
+        <ProtectedRoute><PortalSwimmers /></ProtectedRoute>
       </Route>
 
       {/* Admin Dashboard */}

@@ -40,7 +40,7 @@ router.post("/admin/faq", requireAuth, requireAdmin, async (req, res): Promise<v
 });
 
 router.patch("/admin/faq/:id", requireAuth, requireAdmin, async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const parsed = CreateFaqBody.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: "Invalid FAQ data" }); return; }
   const [updated] = await db.update(faqTable).set({
@@ -52,7 +52,7 @@ router.patch("/admin/faq/:id", requireAuth, requireAdmin, async (req, res): Prom
 });
 
 router.delete("/admin/faq/:id", requireAuth, requireAdmin, async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const [deleted] = await db.delete(faqTable).where(eq(faqTable.id, id)).returning();
   if (!deleted) { res.status(404).json({ error: "Not found" }); return; }
   res.status(204).send();

@@ -4,6 +4,7 @@ import { setAuthTokenGetter } from "@workspace/api-client-react";
 
 interface AuthContextType {
   user: User | null;
+  token: string | null;
   isLoading: boolean;
   login: (token: string, refreshToken: string) => void;
   logout: () => void;
@@ -20,6 +21,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const { data: user, isLoading: profileLoading, isError } = useGetProfile({
     query: {
+      queryKey: ["/api/profile"],
       enabled: !!token,
       retry: false,
     }
@@ -44,7 +46,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user: user || null, isLoading: !!token && profileLoading, login, logout }}>
+    <AuthContext.Provider value={{ user: user || null, token, isLoading: !!token && profileLoading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

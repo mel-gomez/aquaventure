@@ -34,7 +34,7 @@ router.get("/admin/contacts", requireAuth, requireAdmin, async (_req, res): Prom
 });
 
 router.patch("/admin/contacts/:id/status", requireAuth, requireAdmin, async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const { status } = req.body as { status: string };
   const [updated] = await db
     .update(contactsTable)

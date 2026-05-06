@@ -18,6 +18,7 @@ router.get("/profile", requireAuth, async (req, res): Promise<void> => {
     firstName: user.firstName,
     lastName: user.lastName,
     phone: user.phone,
+    avatarUrl: user.avatarUrl,
     role: user.role,
     createdAt: user.createdAt,
   });
@@ -47,6 +48,7 @@ router.patch("/profile", requireAuth, async (req, res): Promise<void> => {
     firstName: user.firstName,
     lastName: user.lastName,
     phone: user.phone,
+    avatarUrl: user.avatarUrl,
     role: user.role,
     createdAt: user.createdAt,
   });

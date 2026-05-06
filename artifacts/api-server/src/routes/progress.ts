@@ -82,7 +82,7 @@ router.post("/admin/progress", requireAuth, requireAdmin, async (req, res): Prom
 });
 
 router.delete("/admin/progress/:id", requireAuth, requireAdmin, async (req, res): Promise<void> => {
-  const id = parseInt(req.params.id);
+  const id = parseInt(String(req.params.id));
   const [deleted] = await db.delete(progressTable).where(eq(progressTable.id, id)).returning();
   if (!deleted) { res.status(404).json({ error: "Not found" }); return; }
   res.json(await enrichRecord(deleted));

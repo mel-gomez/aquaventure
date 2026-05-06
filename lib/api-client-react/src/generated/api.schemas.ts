@@ -55,6 +55,8 @@ export interface User {
   lastName: string;
   /** @nullable */
   phone?: string | null;
+  /** @nullable */
+  avatarUrl?: string | null;
   role: UserRole;
   createdAt: string;
 }
@@ -70,6 +72,43 @@ export interface UpdateProfileBody {
   lastName?: string;
   /** @nullable */
   phone?: string | null;
+  /** @nullable */
+  avatarUrl?: string | null;
+}
+
+export interface SwimmerProfile {
+  id: number;
+  userId: number;
+  swimmerName: string;
+  /** @nullable */
+  avatarUrl?: string | null;
+  /** @nullable */
+  bio?: string | null;
+  /** @nullable */
+  level?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UpsertSwimmerProfileBody {
+  swimmerName: string;
+  /** @nullable */
+  avatarUrl?: string | null;
+  /** @nullable */
+  bio?: string | null;
+  /** @nullable */
+  level?: string | null;
+}
+
+export interface UploadUrlRequest {
+  name: string;
+  size: number;
+  contentType: string;
+}
+
+export interface UploadUrlResponse {
+  uploadURL: string;
+  objectPath: string;
 }
 
 export type ProgramLevel = (typeof ProgramLevel)[keyof typeof ProgramLevel];

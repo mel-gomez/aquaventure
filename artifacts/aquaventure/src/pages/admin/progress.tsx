@@ -100,7 +100,7 @@ export default function AdminProgress() {
 
   const handleDelete = async (id: number) => {
     try {
-      await deleteProgress({ id });
+      await deleteProgress.mutateAsync({ id });
       toast({ title: "Record deleted" });
       queryClient.invalidateQueries({ queryKey: ["/admin/progress"] });
     } catch {

@@ -12,6 +12,8 @@ import faqRouter from "./faq";
 import contactsRouter from "./contacts";
 import attendanceRouter from "./attendance";
 import progressRouter from "./progress";
+import swimmerProfilesRouter from "./swimmerProfiles";
+import storageRouter from "./storage";
 
 const router: IRouter = Router();
 
@@ -28,5 +30,7 @@ router.use(faqRouter);
 router.use(contactsRouter);
 router.use(attendanceRouter);
 router.use(progressRouter);
+router.use(swimmerProfilesRouter);
+router.use(storageRouter);
 
 export default router;
